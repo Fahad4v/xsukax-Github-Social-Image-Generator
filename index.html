@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xsukax Github Social Image Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif; background: #f6f8fa; min-height: 100vh; padding: 20px; color: #24292f; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px solid #d0d7de; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(27, 31, 36, 0.12); }
+        .header h1 { font-size: 32px; font-weight: 600; margin-bottom: 8px; color: #24292f; }
+        .header p { font-size: 16px; color: #57606a; }
+        .header .subtitle { font-size: 14px; color: #0969da; margin-top: 8px; font-weight: 500; }
+		.input-section .subtitle { font-size: 14px; color: #0969da; margin-top: 8px; font-weight: 500; }
+        .input-section { background: white; padding: 24px; border-radius: 12px; border: 1px solid #d0d7de; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(27, 31, 36, 0.12); }
+        .input-group { display: flex; gap: 12px; margin-bottom: 12px; }
+        input[type="text"] { flex: 1; padding: 12px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; transition: border-color 0.2s; background: #ffffff; color: #24292f; }
+        input[type="text"]:focus { outline: none; border-color: #0969da; box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1); }
+        button { padding: 12px 24px; background: #2da44e; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
+        button:hover { background: #2c974b; }
+        button:active { background: #298e46; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; background: #94d3a2; }
+        .error { color: #cf222e; padding: 12px; background: #ffebe9; border-radius: 6px; margin-top: 12px; display: none; border: 1px solid #ffc1bc; font-size: 14px; }
+        .loading { text-align: center; color: #57606a; font-size: 16px; padding: 24px; display: none; background: white; border-radius: 12px; border: 1px solid #d0d7de; }
+        .results { display: none; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 24px; }
+        .image-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #d0d7de; box-shadow: 0 1px 3px rgba(27, 31, 36, 0.12); transition: box-shadow 0.2s; }
+        .image-card:hover { box-shadow: 0 3px 12px rgba(27, 31, 36, 0.15); }
+        .image-wrapper { position: relative; width: 100%; padding-top: 50%; background: #f6f8fa; border-bottom: 1px solid #d0d7de; }
+        .image-wrapper canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .image-info { padding: 16px; }
+        .image-info h3 { margin-bottom: 6px; color: #0969da; font-size: 16px; font-weight: 600; }
+        .image-info p { color: #57606a; font-size: 14px; margin-bottom: 12px; }
+        .download-btn { width: 100%; padding: 10px; margin-top: 8px; background: #0969da; font-size: 14px; }
+        .download-btn:hover { background: #0860ca; }
+        @media (max-width: 768px) { .gallery { grid-template-columns: 1fr; } .input-group { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 xsukax Github Social Image Generator</h1>
+            <p>Create stunning cover images for your GitHub repositories</p>
+            <p class="subtitle">✨ 100+ unique color combinations • 6 professional templates</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="repoUrl" placeholder="Enter GitHub repository URL (e.g., https://github.com/owner/repo)">
+                <button id="generateBtn" onclick="generateImages()">Generate Images</button>
+            </div>
+			<p class="subtitle">Every time you click on "Generate Images" button you will get new colors</p>
+            <div id="errorMsg" class="error"></div>
+        </div>
+
+        <div id="loading" class="loading">
+            <p>🎨 Generating your unique cover images...</p>
+        </div>
+
+        <div id="results" class="results">
+            <div class="gallery">
+                <div class="image-card">
+                    <div class="image-wrapper">
+                        <canvas id="canvas1" width="1280" height="640"></canvas>
+                    </div>
+                    <div class="image-info">
+                        <h3>Minimal</h3>
+                        <button class="download-btn" onclick="downloadImage('canvas1', 'minimal')">Download Image</button>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-wrapper">
+                        <canvas id="canvas2" width="1280" height="640"></canvas>
+                    </div>
+                    <div class="image-info">
+                        <h3>Vibrant</h3>
+                        <button class="download-btn" onclick="downloadImage('canvas2', 'vibrant')">Download Image</button>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-wrapper">
+                        <canvas id="canvas3" width="1280" height="640"></canvas>
+                    </div>
+                    <div class="image-info">
+                        <h3>Elegant</h3>
+                        <button class="download-btn" onclick="downloadImage('canvas3', 'elegant')">Download Image</button>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-wrapper">
+                        <canvas id="canvas4" width="1280" height="640"></canvas>
+                    </div>
+                    <div class="image-info">
+                        <h3>Tech</h3>
+                        <button class="download-btn" onclick="downloadImage('canvas4', 'tech')">Download Image</button>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-wrapper">
+                        <canvas id="canvas5" width="1280" height="640"></canvas>
+                    </div>
+                    <div class="image-info">
+                        <h3>Gradient Wave</h3>
+                        <button class="download-btn" onclick="downloadImage('canvas5', 'wave')">Download Image</button>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-wrapper">
+                        <canvas id="canvas6" width="1280" height="640"></canvas>
+                    </div>
+                    <div class="image-info">
+                        <h3>Abstract Geometric</h3>
+                        <button class="download-btn" onclick="downloadImage('canvas6', 'geometric')">Download Image</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colorSchemes = [
+            { bg1: '#f0f4ff', bg2: '#e0e7ff', accent1: '#667eea', accent2: '#764ba2', text: '#1a202c', subtext: '#4a5568' },
+            { bg1: '#fff5f7', bg2: '#ffe0e9', accent1: '#f56565', accent2: '#ed64a6', text: '#2d3748', subtext: '#4a5568' },
+            { bg1: '#1a202c', bg2: '#2d3748', accent1: '#4299e1', accent2: '#667eea', text: '#f7fafc', subtext: '#e2e8f0' },
+            { bg1: '#0f1419', bg2: '#1c2938', accent1: '#38b2ac', accent2: '#4fd1c5', text: '#ffffff', subtext: '#cbd5e0' },
+            { bg1: '#fffbeb', bg2: '#fef3c7', accent1: '#f59e0b', accent2: '#d97706', text: '#78350f', subtext: '#92400e' },
+            { bg1: '#f0fdf4', bg2: '#dcfce7', accent1: '#10b981', accent2: '#059669', text: '#064e3b', subtext: '#065f46' },
+            { bg1: '#faf5ff', bg2: '#f3e8ff', accent1: '#a855f7', accent2: '#9333ea', text: '#581c87', subtext: '#6b21a8' },
+            { bg1: '#1e1b4b', bg2: '#312e81', accent1: '#818cf8', accent2: '#6366f1', text: '#e0e7ff', subtext: '#c7d2fe' },
+            { bg1: '#ecfeff', bg2: '#cffafe', accent1: '#06b6d4', accent2: '#0891b2', text: '#164e63', subtext: '#155e75' },
+            { bg1: '#fff1f2', bg2: '#ffe4e6', accent1: '#fb7185', accent2: '#f43f5e', text: '#881337', subtext: '#9f1239' },
+            { bg1: '#18181b', bg2: '#27272a', accent1: '#f97316', accent2: '#ea580c', text: '#fafafa', subtext: '#e4e4e7' },
+            { bg1: '#fefce8', bg2: '#fef9c3', accent1: '#eab308', accent2: '#ca8a04', text: '#713f12', subtext: '#854d0e' },
+            { bg1: '#0c4a6e', bg2: '#075985', accent1: '#7dd3fc', accent2: '#38bdf8', text: '#f0f9ff', subtext: '#e0f2fe' },
+            { bg1: '#450a0a', bg2: '#7f1d1d', accent1: '#fca5a5', accent2: '#f87171', text: '#fee2e2', subtext: '#fecaca' },
+            { bg1: '#f5f3ff', bg2: '#ede9fe', accent1: '#8b5cf6', accent2: '#7c3aed', text: '#4c1d95', subtext: '#5b21b6' },
+            { bg1: '#14532d', bg2: '#166534', accent1: '#86efac', accent2: '#4ade80', text: '#f0fdf4', subtext: '#dcfce7' },
+            { bg1: '#fef2f2', bg2: '#fee2e2', accent1: '#dc2626', accent2: '#b91c1c', text: '#7f1d1d', subtext: '#991b1b' },
+            { bg1: '#0a0a0a', bg2: '#171717', accent1: '#22d3ee', accent2: '#06b6d4', text: '#f5f5f5', subtext: '#d4d4d4' },
+            { bg1: '#fdf4ff', bg2: '#fae8ff', accent1: '#d946ef', accent2: '#c026d3', text: '#701a75', subtext: '#86198f' },
+            { bg1: '#fffbeb', bg2: '#fef3c7', accent1: '#fb923c', accent2: '#f97316', text: '#7c2d12', subtext: '#9a3412' },
+            { bg1: '#001f3f', bg2: '#003d7a', accent1: '#7fdbff', accent2: '#39cccc', text: '#d4f1f9', subtext: '#a8e0f0' },
+            { bg1: '#2d0a31', bg2: '#4a1458', accent1: '#ff6ec7', accent2: '#c13584', text: '#ffd1f4', subtext: '#ffb3e6' },
+            { bg1: '#0d1117', bg2: '#161b22', accent1: '#58a6ff', accent2: '#1f6feb', text: '#c9d1d9', subtext: '#8b949e' },
+            { bg1: '#1a0f1f', bg2: '#2d1b3d', accent1: '#bb86fc', accent2: '#9965f4', text: '#e8def8', subtext: '#d0bcff' },
+            { bg1: '#f8fafc', bg2: '#e2e8f0', accent1: '#0ea5e9', accent2: '#0284c7', text: '#0f172a', subtext: '#334155' }
+        ];
+
+        function parseGitHubUrl(url) {
+            const patterns = [
+                /github\.com\/([^\/]+)\/([^\/\?#]+)/,
+                /^([^\/]+)\/([^\/]+)$/
+            ];
+
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) {
+                    return { owner: match[1], repo: match[2].replace(/\.git$/, '') };
+                }
+            }
+            return null;
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+
+        function calculateFontSize(ctx, text, maxWidth, baseFontSize) {
+            let fontSize = baseFontSize;
+            ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            
+            while (ctx.measureText(text).width > maxWidth && fontSize > 32) {
+                fontSize -= 2;
+                ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            }
+            
+            return fontSize;
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            const lines = [];
+
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i] + ' ';
+                const metrics = ctx.measureText(testLine);
+                
+                if (metrics.width > maxWidth && i > 0) {
+                    lines.push(line.trim());
+                    line = words[i] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line.trim());
+
+            lines.forEach((line, index) => {
+                ctx.fillText(line, x, y + (index * lineHeight));
+            });
+
+            return lines.length * lineHeight;
+        }
+
+        function drawLightMinimal(canvas, owner, repo, description, scheme) {
+            const ctx = canvas.getContext('2d');
+            
+            const gradient = ctx.createLinearGradient(0, 0, 1280, 640);
+            gradient.addColorStop(0, scheme.bg1);
+            gradient.addColorStop(1, scheme.bg2);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            ctx.globalAlpha = 0.1;
+            ctx.fillStyle = scheme.accent1;
+            ctx.beginPath();
+            ctx.arc(1100, 150, 200, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = scheme.accent2;
+            ctx.beginPath();
+            ctx.arc(200, 500, 150, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            const repoText = `${owner} / ${repo}`;
+            const fontSize = calculateFontSize(ctx, repoText, 1120, 72);
+            ctx.fillStyle = scheme.text;
+            ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillText(repoText, 80, 220);
+
+            const gradient2 = ctx.createLinearGradient(80, 260, 600, 260);
+            gradient2.addColorStop(0, scheme.accent1);
+            gradient2.addColorStop(1, scheme.accent2);
+            ctx.fillStyle = gradient2;
+            ctx.fillRect(80, 260, 400, 6);
+
+            if (description) {
+                ctx.fillStyle = scheme.subtext;
+                ctx.font = '32px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                wrapText(ctx, description, 80, 340, 1100, 50);
+            }
+
+            ctx.fillStyle = scheme.accent1;
+            ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.fillText(owner, 80, 590);
+        }
+
+        function drawLightVibrant(canvas, owner, repo, description, scheme) {
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = scheme.bg1;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            ctx.globalAlpha = 0.15;
+            const gradient1 = ctx.createLinearGradient(0, 0, 800, 800);
+            gradient1.addColorStop(0, scheme.accent1);
+            gradient1.addColorStop(1, scheme.accent2);
+            ctx.fillStyle = gradient1;
+            
+            ctx.beginPath();
+            ctx.moveTo(900, 0);
+            ctx.lineTo(1280, 0);
+            ctx.lineTo(1280, 400);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = scheme.accent2;
+            ctx.beginPath();
+            ctx.moveTo(0, 400);
+            ctx.lineTo(300, 640);
+            ctx.lineTo(0, 640);
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            const boxGradient = ctx.createLinearGradient(60, 120, 600, 300);
+            boxGradient.addColorStop(0, scheme.accent1);
+            boxGradient.addColorStop(1, scheme.accent2);
+            ctx.fillStyle = boxGradient;
+            ctx.fillRect(60, 120, 20, 400);
+
+            const repoText = `${owner} / ${repo}`;
+            const fontSize = calculateFontSize(ctx, repoText, 1040, 70);
+            ctx.fillStyle = scheme.text;
+            ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillText(repoText, 120, 220);
+
+            if (description) {
+                ctx.fillStyle = scheme.subtext;
+                ctx.font = '30px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                wrapText(ctx, description, 120, 300, 1000, 48);
+            }
+
+            ctx.fillStyle = scheme.accent1;
+            ctx.fillRect(120, 540, 100, 4);
+            ctx.font = 'bold 26px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.fillText(owner, 120, 580);
+        }
+
+        function drawDarkElegant(canvas, owner, repo, description, scheme) {
+            const ctx = canvas.getContext('2d');
+            
+            const gradient = ctx.createRadialGradient(640, 320, 0, 640, 320, 800);
+            gradient.addColorStop(0, scheme.bg2);
+            gradient.addColorStop(1, scheme.bg1);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            ctx.globalAlpha = 0.3;
+            const glow1 = ctx.createRadialGradient(200, 150, 0, 200, 150, 300);
+            glow1.addColorStop(0, scheme.accent1);
+            glow1.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow1;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            const glow2 = ctx.createRadialGradient(1000, 500, 0, 1000, 500, 350);
+            glow2.addColorStop(0, scheme.accent2);
+            glow2.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow2;
+            ctx.fillRect(0, 0, 1280, 640);
+            ctx.globalAlpha = 1;
+
+            const repoText = `${owner} / ${repo}`;
+            const fontSize = calculateFontSize(ctx, repoText, 1080, 68);
+            ctx.shadowColor = scheme.accent1;
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = scheme.text;
+            ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillText(repoText, 100, 240);
+            ctx.shadowBlur = 0;
+
+            const lineGradient = ctx.createLinearGradient(100, 280, 700, 280);
+            lineGradient.addColorStop(0, scheme.accent1);
+            lineGradient.addColorStop(0.5, scheme.accent2);
+            lineGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = lineGradient;
+            ctx.fillRect(100, 280, 600, 4);
+
+            if (description) {
+                ctx.fillStyle = scheme.subtext;
+                ctx.font = '30px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                wrapText(ctx, description, 100, 360, 1050, 48);
+            }
+
+            ctx.fillStyle = scheme.accent1;
+            ctx.font = 'bold 26px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.fillText(owner, 100, 580);
+        }
+
+        function drawDarkTech(canvas, owner, repo, description, scheme) {
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = scheme.bg1;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            ctx.globalAlpha = 0.1;
+            ctx.strokeStyle = scheme.accent1;
+            ctx.lineWidth = 1;
+            
+            for (let x = 0; x < 1280; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 640);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y < 640; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(1280, y);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+
+            ctx.strokeStyle = scheme.accent1;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(80, 100);
+            ctx.lineTo(80, 140);
+            ctx.lineTo(120, 140);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(1200, 500);
+            ctx.lineTo(1200, 540);
+            ctx.lineTo(1160, 540);
+            ctx.stroke();
+
+            const repoText = `${owner} / ${repo}`;
+            const fontSize = calculateFontSize(ctx, repoText, 1080, 66);
+            ctx.fillStyle = scheme.text;
+            ctx.font = `bold ${fontSize}px monospace`;
+            ctx.fillText(repoText, 100, 250);
+
+            const gradient = ctx.createLinearGradient(100, 290, 800, 290);
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.3, scheme.accent1);
+            gradient.addColorStop(0.7, scheme.accent2);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(100, 290, 700, 3);
+
+            if (description) {
+                ctx.fillStyle = scheme.subtext;
+                ctx.font = '28px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                wrapText(ctx, description, 100, 360, 1050, 46);
+            }
+
+            ctx.strokeStyle = scheme.accent1;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(100, 550, 10, 10);
+            ctx.fillStyle = scheme.text;
+            ctx.font = 'bold 24px monospace';
+            ctx.fillText(`[ ${owner} ]`, 120, 562);
+        }
+
+        function drawGradientWave(canvas, owner, repo, description, scheme) {
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = scheme.bg1;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            ctx.globalAlpha = 0.4;
+            for (let i = 0; i < 3; i++) {
+                const gradient = ctx.createLinearGradient(0, 200 + i * 150, 1280, 400 + i * 150);
+                gradient.addColorStop(0, scheme.accent1);
+                gradient.addColorStop(0.5, scheme.accent2);
+                gradient.addColorStop(1, scheme.accent1);
+                ctx.fillStyle = gradient;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 150 + i * 100);
+                for (let x = 0; x <= 1280; x += 20) {
+                    const y = 150 + i * 100 + Math.sin(x / 100 + i) * 50;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(1280, 640);
+                ctx.lineTo(0, 640);
+                ctx.closePath();
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+
+            const repoText = `${owner} / ${repo}`;
+            const fontSize = calculateFontSize(ctx, repoText, 1100, 70);
+            
+            ctx.shadowColor = scheme.accent2;
+            ctx.shadowBlur = 30;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 5;
+            ctx.fillStyle = scheme.text;
+            ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillText(repoText, 90, 200);
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+
+            if (description) {
+                ctx.fillStyle = scheme.subtext;
+                ctx.font = '30px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                wrapText(ctx, description, 90, 280, 1080, 48);
+            }
+
+            const badgeGradient = ctx.createLinearGradient(90, 540, 250, 540);
+            badgeGradient.addColorStop(0, scheme.accent1);
+            badgeGradient.addColorStop(1, scheme.accent2);
+            ctx.fillStyle = badgeGradient;
+            ctx.beginPath();
+            ctx.roundRect(90, 520, 160, 50, 25);
+            ctx.fill();
+
+            ctx.fillStyle = scheme.bg1;
+            ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.fillText(owner, 120, 552);
+        }
+
+        function drawAbstractGeometric(canvas, owner, repo, description, scheme) {
+            const ctx = canvas.getContext('2d');
+            
+            const gradient = ctx.createLinearGradient(0, 0, 1280, 640);
+            gradient.addColorStop(0, scheme.bg1);
+            gradient.addColorStop(1, scheme.bg2);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1280, 640);
+
+            ctx.globalAlpha = 0.2;
+            ctx.fillStyle = scheme.accent1;
+            ctx.beginPath();
+            ctx.moveTo(1100, 0);
+            ctx.lineTo(1280, 0);
+            ctx.lineTo(1280, 300);
+            ctx.lineTo(1000, 100);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = scheme.accent2;
+            ctx.beginPath();
+            ctx.moveTo(0, 450);
+            ctx.lineTo(250, 350);
+            ctx.lineTo(300, 640);
+            ctx.lineTo(0, 640);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = scheme.accent1;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(1050, 450, 120, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = scheme.accent2;
+            ctx.beginPath();
+            ctx.rect(150, 100, 80, 80);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+
+            const repoText = `${owner} / ${repo}`;
+            const fontSize = calculateFontSize(ctx, repoText, 1000, 68);
+            ctx.fillStyle = scheme.text;
+            ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillText(repoText, 100, 280);
+
+            ctx.globalAlpha = 0.8;
+            const accentGradient = ctx.createLinearGradient(100, 320, 500, 320);
+            accentGradient.addColorStop(0, scheme.accent1);
+            accentGradient.addColorStop(1, scheme.accent2);
+            ctx.fillStyle = accentGradient;
+            ctx.beginPath();
+            ctx.moveTo(100, 320);
+            ctx.lineTo(120, 340);
+            ctx.lineTo(480, 340);
+            ctx.lineTo(500, 320);
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            if (description) {
+                ctx.fillStyle = scheme.subtext;
+                ctx.font = '29px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                wrapText(ctx, description, 100, 400, 1000, 46);
+            }
+
+            ctx.fillStyle = scheme.accent1;
+            ctx.fillRect(100, 550, 6, 40);
+            ctx.fillStyle = scheme.text;
+            ctx.font = 'bold 26px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.fillText(owner, 120, 580);
+        }
+
+        function getRandomSchemes(count) {
+            const shuffled = [...colorSchemes].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+
+        async function generateImages() {
+            const urlInput = document.getElementById('repoUrl').value.trim();
+            const generateBtn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+
+            if (!urlInput) {
+                showError('Please enter a GitHub repository URL');
+                return;
+            }
+
+            const parsed = parseGitHubUrl(urlInput);
+            if (!parsed) {
+                showError('Invalid GitHub URL format. Use: https://github.com/owner/repo');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            loading.style.display = 'block';
+            results.style.display = 'none';
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}`);
+                
+                if (!response.ok) {
+                    throw new Error(response.status === 404 ? 'Repository not found' : 'Failed to fetch repository data');
+                }
+
+                const data = await response.json();
+                const description = data.description || 'No description available';
+
+                const randomSchemes = getRandomSchemes(6);
+
+                const canvas1 = document.getElementById('canvas1');
+                const canvas2 = document.getElementById('canvas2');
+                const canvas3 = document.getElementById('canvas3');
+                const canvas4 = document.getElementById('canvas4');
+                const canvas5 = document.getElementById('canvas5');
+                const canvas6 = document.getElementById('canvas6');
+
+                drawLightMinimal(canvas1, parsed.owner, parsed.repo, description, randomSchemes[0]);
+                drawLightVibrant(canvas2, parsed.owner, parsed.repo, description, randomSchemes[1]);
+                drawDarkElegant(canvas3, parsed.owner, parsed.repo, description, randomSchemes[2]);
+                drawDarkTech(canvas4, parsed.owner, parsed.repo, description, randomSchemes[3]);
+                drawGradientWave(canvas5, parsed.owner, parsed.repo, description, randomSchemes[4]);
+                drawAbstractGeometric(canvas6, parsed.owner, parsed.repo, description, randomSchemes[5]);
+
+                loading.style.display = 'none';
+                results.style.display = 'block';
+                results.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                showError(error.message);
+                loading.style.display = 'none';
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        function downloadImage(canvasId, templateName) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = `github-cover-${templateName}-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        document.getElementById('repoUrl').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateImages();
+            }
+        });
+    </script>
+</body>
+</html>
