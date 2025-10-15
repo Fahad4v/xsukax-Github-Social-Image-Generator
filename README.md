@@ -72,7 +72,7 @@ Visit the live application at your hosted URL and start generating images immedi
 1. Fork the repository to your GitHub account
 2. Go to repository Settings → Pages
 3. Select the main branch as the source
-4. Your application will be available at `https://yourusername.github.io/xsukax-Github-Social-Image-Generator/`
+4. Your application will be available at `https://xsukax.github.io/xsukax-Github-Social-Image-Generator/`
 
 ### Requirements
 
